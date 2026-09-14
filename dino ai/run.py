@@ -8,6 +8,18 @@ import sys
 import subprocess
 from pathlib import Path
 
+# Ensure UTF-8 output on Windows consoles
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+_orig_print = print
+def print(*args, **kwargs):
+    kwargs.setdefault("flush", True)
+    _orig_print(*args, **kwargs)
+
+
 def check_requirements():
     """Check if all requirements are met"""
     print("🔍 Checking requirements...")
@@ -32,10 +44,10 @@ def check_requirements():
 
 def install_dependencies():
     """Install Python dependencies"""
-    print("📦 Installing dependencies...")
+    print("📦 Checking / Installing dependencies...")
     try:
         subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], 
-                      check=True, capture_output=True)
+                      check=True)
         print("✅ Dependencies installed successfully")
         return True
     except subprocess.CalledProcessError as e:
