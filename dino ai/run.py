@@ -43,8 +43,20 @@ def check_requirements():
     return True
 
 def install_dependencies():
-    """Install Python dependencies"""
-    print("📦 Checking / Installing dependencies...")
+    """Check and install Python dependencies if needed"""
+    core_modules = ["fastapi", "uvicorn", "pydantic", "sqlalchemy", "multipart", "jinja2", "dotenv", "requests"]
+    missing = []
+    for mod in core_modules:
+        try:
+            __import__(mod)
+        except ImportError:
+            missing.append(mod)
+
+    if not missing:
+        print("✅ Core dependencies already satisfied")
+        return True
+
+    print("📦 Installing dependencies...")
     try:
         subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], 
                       check=True)
