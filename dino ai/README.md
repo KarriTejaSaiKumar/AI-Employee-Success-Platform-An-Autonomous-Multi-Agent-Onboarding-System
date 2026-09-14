@@ -198,7 +198,7 @@ Persisted in `agent_execution_logs` and shown on **Manager Insights**.
 ## Quick start (local)
 
 ```bash
-cd "crew ai"
+cd "dino ai"
 python -m venv venv
 # Windows:
 venv\Scripts\activate
@@ -282,4 +282,15 @@ The app runs on port **8000**. Volumes persist `./data` (SQLite, Chroma, uploads
 
 ---
 
+## 👥 Team & Contributors
+
+| Name | GitHub Profile |
+| :--- | :--- |
+| **Teja Sai Kumar K** | [@KarriTejaSaiKumar](https://github.com/KarriTejaSaiKumar) |
+| **Glory Jasmine** | [@gloryjasmine](https://github.com/gloryjasmine) |
+| **Swaroop Maddala** | [@Swaroop-maddala](https://github.com/Swaroop-maddala) |
+
+---
+
 Built for production-style agentic onboarding — modular, Docker-ready, and extensible.
+

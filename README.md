@@ -2,8 +2,8 @@
 
 **AetherSuccess** — an autonomous multi-agent employee onboarding & success platform.
 
-Primary application code: [`crew ai/`](./crew%20ai/)  
-Full docs: **[crew ai/README.md](./crew%20ai/README.md)**
+Primary application code: [`dino ai/`](./dino%20ai/)  
+Full docs: **[dino ai/README.md](./dino%20ai/README.md)**
 
 ---
 
@@ -46,9 +46,9 @@ Faster, personalized onboarding; fewer knowledge gaps; clear risk signals for ma
 ## Quick start (fresh clone)
 
 ```bash
-git clone https://github.com/sidra86/AI-Employee-Success-Platform-An-Autonomous-Multi-Agent-Onboarding-System.git
+git clone https://github.com/KarriTejaSaiKumar/AI-Employee-Success-Platform-An-Autonomous-Multi-Agent-Onboarding-System.git
 cd AI-Employee-Success-Platform-An-Autonomous-Multi-Agent-Onboarding-System
-cd "crew ai"
+cd "dino ai"
 
 python -m venv venv
 
@@ -75,3 +75,14 @@ Then open the app in your browser:
 - `/health` — Health check
 
 > **Note:** `.env` is gitignored. Always copy from `.env.example` after cloning.
+
+---
+
+## 👥 Team & Contributors
+
+| Name | GitHub Profile |
+| :--- | :--- |
+| **Teja Sai Kumar K** | [@KarriTejaSaiKumar](https://github.com/KarriTejaSaiKumar) |
+| **Glory Jasmine** | [@gloryjasmine](https://github.com/gloryjasmine) |
+| **Swaroop Maddala** | [@Swaroop-maddala](https://github.com/Swaroop-maddala) |
+

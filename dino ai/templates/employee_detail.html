@@ -1,0 +1,542 @@
+{% extends "base.html" %}
+
+{% block title %}{{ employee.name }} - AetherSuccess{% endblock %}
+
+{% block content %}
+
+<!-- Employee Header -->
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <h2 class="mb-1">{{ employee.name }}</h2>
+        <p class="text-muted mb-0">
+            {{ employee.position }} · {{ employee.department }} · {{ employee.email }}
+        </p>
+    </div>
+
+    <div class="text-end">
+        <div class="display-6 fw-bold" style="color:#0f766e;">
+            {{ '%.0f'|format(completion_percentage or 0) }}%
+        </div>
+        <small class="text-muted">Completion</small>
+    </div>
+</div>
+
+
+<!-- AI Adaptive Decision -->
+<div class="card mb-4 border-0 shadow-sm"
+     style="background:linear-gradient(135deg,#eef2ff,#f5f3ff);">
+
+    <div class="card-body p-4">
+
+        <div class="d-flex align-items-center mb-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                 style="width:48px;height:48px;background:#4f46e5;color:white;">
+                <i class="fas fa-brain"></i>
+            </div>
+
+            <div>
+                <h4 class="mb-0">AI Adaptive Decision</h4>
+                <small class="text-muted">
+                    Personalized using employee memory, performance and learning signals
+                </small>
+            </div>
+        </div>
+
+
+        <div class="row g-3">
+
+            <!-- Risk -->
+            <div class="col-md-3">
+                <div class="bg-white rounded p-3 h-100">
+                    <small class="text-muted">Risk Level</small>
+
+                    <h5 class="mt-1 mb-0 text-capitalize">
+                        {{ memory.risk_level or 'low' }}
+                    </h5>
+
+                    {% if memory.risk_level == 'high' %}
+                    <small class="text-danger">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Immediate support required
+                    </small>
+
+                    {% elif memory.risk_level == 'medium' %}
+                    <small class="text-warning">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        Additional guidance recommended
+                    </small>
+
+                    {% else %}
+                    <small class="text-success">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Progressing normally
+                    </small>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <!-- Confidence -->
+            <div class="col-md-3">
+                <div class="bg-white rounded p-3 h-100">
+                    <small class="text-muted">AI Confidence</small>
+
+                    <h5 class="mt-1 mb-0">
+                        {{ '%.0f'|format((memory.confidence_score or 0) * 100) }}%
+                    </h5>
+
+                    <small class="text-muted">
+                        Based on learning progress
+                    </small>
+                </div>
+            </div>
+
+
+            <!-- Learning Style -->
+            <div class="col-md-3">
+                <div class="bg-white rounded p-3 h-100">
+                    <small class="text-muted">Learning Style</small>
+
+                    <h5 class="mt-1 mb-0 text-capitalize">
+                        {{ (memory.preferred_learning_style or 'mixed').replace('_', ' ') }}
+                    </h5>
+
+                    <small class="text-muted">
+                        Used to personalize activities
+                    </small>
+                </div>
+            </div>
+
+
+            <!-- Adaptive Action -->
+            <div class="col-md-3">
+                <div class="bg-white rounded p-3 h-100">
+                    <small class="text-muted">Next AI Action</small>
+
+                    {% if memory.weak_topics %}
+                        <h5 class="mt-1 mb-0">
+                            Remedial Learning
+                        </h5>
+                        <small class="text-primary">
+                            Focus on knowledge gaps
+                        </small>
+
+                    {% elif (memory.confidence_score or 0) > 0.8 %}
+                        <h5 class="mt-1 mb-0">
+                            Accelerate
+                        </h5>
+                        <small class="text-success">
+                            Move to advanced modules
+                        </small>
+
+                    {% else %}
+                        <h5 class="mt-1 mb-0">
+                            Guided Learning
+                        </h5>
+                        <small class="text-primary">
+                            Continue personalized path
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Reasoning -->
+        <div class="mt-4 p-3 rounded bg-white">
+
+            <div class="fw-semibold mb-2">
+                <i class="fas fa-lightbulb text-warning me-2"></i>
+                Why is the AI adapting this way?
+            </div>
+
+            {% if memory.weak_topics %}
+
+                <p class="mb-2">
+                    The system detected knowledge gaps in:
+                    <strong>{{ memory.weak_topics|join(', ') }}</strong>.
+                </p>
+
+                <div class="text-primary">
+                    <i class="fas fa-arrow-right me-2"></i>
+                    The onboarding path is being adapted with additional practice
+                    and remedial learning.
+                </div>
+
+            {% elif (memory.confidence_score or 0) > 0.8 %}
+
+                <p class="mb-2">
+                    The employee is demonstrating strong learning confidence.
+                </p>
+
+                <div class="text-success">
+                    <i class="fas fa-arrow-right me-2"></i>
+                    The system can accelerate the employee toward advanced,
+                    role-specific content.
+                </div>
+
+            {% else %}
+
+                <p class="mb-2">
+                    The employee is progressing through the onboarding journey.
+                </p>
+
+                <div class="text-primary">
+                    <i class="fas fa-arrow-right me-2"></i>
+                    The AI will continue monitoring performance and adapt
+                    the next learning step.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Key Metrics -->
+<div class="row mb-4">
+
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Confidence</div>
+                <h4>
+                    {{ '%.0f'|format((memory.confidence_score or 0) * 100) }}%
+                </h4>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Engagement</div>
+                <h4>
+                    {{ '%.0f'|format((memory.engagement_score or 0) * 100) }}%
+                </h4>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Risk</div>
+                <h4 class="text-capitalize">
+                    {{ memory.risk_level or 'low' }}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Learning Style</div>
+                <h5 class="mb-0">
+                    {{ (memory.preferred_learning_style or 'mixed').replace('_', ' ') }}
+                </h5>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Adaptive Mentor Memory -->
+<div class="row mb-4">
+
+    <div class="col-lg-6 mb-3">
+
+        <div class="card h-100">
+
+            <div class="card-header bg-white">
+                <strong>
+                    <i class="fas fa-brain me-2 text-primary"></i>
+                    Adaptive Mentor Memory
+                </strong>
+            </div>
+
+            <div class="card-body">
+
+                <p>
+                    <strong>Strong topics:</strong>
+                    {{ memory.strong_topics|join(', ')
+                       if memory.strong_topics else '—' }}
+                </p>
+
+                <p>
+                    <strong>Weak topics:</strong>
+                    {{ memory.weak_topics|join(', ')
+                       if memory.weak_topics else '—' }}
+                </p>
+
+                <p><strong>Recommendations:</strong></p>
+
+                <ul>
+                    {% for r in memory.recommended_next_modules or [] %}
+                    <li>{{ r }}</li>
+                    {% else %}
+                    <li class="text-muted">
+                        Run onboarding to generate mentor recommendations.
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <p class="mb-1">
+                    <strong>Personalized Roadmap</strong>
+                </p>
+
+                {% for step in memory.personalized_roadmap or [] %}
+
+                <span class="badge bg-light text-dark me-1 mb-1">
+                    {{ step.module }} ({{ step.action }})
+                </span>
+
+                {% else %}
+
+                <span class="text-muted">
+                    Roadmap will appear after onboarding.
+                </span>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Progress Timeline -->
+
+    <div class="col-lg-6 mb-3">
+
+        <div class="card h-100">
+
+            <div class="card-header bg-white">
+                <strong>
+                    <i class="fas fa-stream me-2 text-primary"></i>
+                    Progress Timeline
+                </strong>
+            </div>
+
+            <div class="card-body">
+
+                {% for event in timeline %}
+
+                <div class="timeline-item">
+
+                    <div class="fw-semibold">
+                        {{ event.label }}
+                    </div>
+
+                    <small class="text-muted">
+                        {{ event.at }} · {{ event.type }}
+                    </small>
+
+                </div>
+
+                {% else %}
+
+                <p class="text-muted mb-0">
+                    No timeline events yet.
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Quiz Results + Agent Activity -->
+
+<div class="row mb-4">
+
+    <div class="col-lg-6 mb-3">
+
+        <div class="card h-100">
+
+            <div class="card-header bg-white">
+                <strong>
+                    <i class="fas fa-clipboard-check me-2 text-primary"></i>
+                    Quiz Results
+                </strong>
+            </div>
+
+            <div class="card-body">
+
+                {% if quiz_results %}
+
+                <ul class="list-group list-group-flush">
+
+                    {% for q in quiz_results %}
+
+                    <li class="list-group-item d-flex justify-content-between">
+
+                        <span>
+                            Score {{ q.score }} /
+                            {{ q.total_questions }}
+                        </span>
+
+                        <small class="text-muted">
+                            {{ q.completed_at }}
+                        </small>
+
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+                {% else %}
+
+                <p class="text-muted mb-0">
+                    No quizzes yet.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-6 mb-3">
+
+        <div class="card h-100">
+
+            <div class="card-header bg-white">
+                <strong>
+                    <i class="fas fa-network-wired me-2 text-primary"></i>
+                    Agent Activity Logs
+                </strong>
+            </div>
+
+            <div class="card-body">
+
+                {% for t in traces %}
+
+                <div class="border-bottom py-2">
+
+                    <div class="d-flex justify-content-between">
+
+                        <span class="fw-semibold">
+                            {{ t.trace_id[:8] }}…
+                        </span>
+
+                        <span class="badge
+                            {% if t.status == 'ok' %}
+                                bg-success
+                            {% else %}
+                                bg-danger
+                            {% endif %}
+                        ">
+                            {{ t.status }}
+                        </span>
+
+                    </div>
+
+                    <small class="text-muted">
+                        {{ t.duration_ms }} ms ·
+                        tokens {{ t.total_tokens_estimate }}
+                    </small>
+
+                </div>
+
+                {% else %}
+
+                <p class="text-muted mb-0">
+                    No agent runs for this employee yet.
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Actions -->
+
+<div class="d-flex gap-2">
+
+    <button
+        class="btn btn-primary"
+        onclick="startOnboarding({{ employee.id }})">
+
+        <i class="fas fa-robot me-2"></i>
+        Run Autonomous Onboarding
+
+    </button>
+
+    <a href="/dashboard" class="btn btn-outline-secondary">
+        Back
+    </a>
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+async function startOnboarding(id) {
+
+    if (!confirm('Start planner-driven autonomous onboarding?')) return;
+
+    const button = event?.target?.closest('button');
+
+    if (button) {
+        button.disabled = true;
+        button.innerHTML =
+            '<i class="fas fa-spinner fa-spin me-2"></i>AI Agents Working...';
+    }
+
+    const res = await fetch(
+        `/employees/${id}/start-onboarding`,
+        { method: 'POST' }
+    );
+
+    const data = await res.json();
+
+    if (res.ok) {
+
+        location.reload();
+
+    } else {
+
+        alert(data.detail || 'Failed');
+
+        if (button) {
+            button.disabled = false;
+            button.innerHTML =
+                '<i class="fas fa-robot me-2"></i>Run Autonomous Onboarding';
+        }
+
+    }
+
+}
+
+</script>
+
+{% endblock %}
