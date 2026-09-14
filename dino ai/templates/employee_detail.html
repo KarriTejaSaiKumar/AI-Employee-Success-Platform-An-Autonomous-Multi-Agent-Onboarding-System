@@ -3,540 +3,374 @@
 {% block title %}{{ employee.name }} - AetherSuccess{% endblock %}
 
 {% block content %}
-
-<!-- Employee Header -->
-<div class="d-flex justify-content-between align-items-start mb-4">
-    <div>
-        <h2 class="mb-1">{{ employee.name }}</h2>
-        <p class="text-muted mb-0">
-            {{ employee.position }} · {{ employee.department }} · {{ employee.email }}
-        </p>
-    </div>
-
-    <div class="text-end">
-        <div class="display-6 fw-bold" style="color:#0f766e;">
-            {{ '%.0f'|format(completion_percentage or 0) }}%
-        </div>
-        <small class="text-muted">Completion</small>
-    </div>
-</div>
-
-
-<!-- AI Adaptive Decision -->
-<div class="card mb-4 border-0 shadow-sm"
-     style="background:linear-gradient(135deg,#eef2ff,#f5f3ff);">
-
-    <div class="card-body p-4">
-
-        <div class="d-flex align-items-center mb-3">
-            <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                 style="width:48px;height:48px;background:#4f46e5;color:white;">
-                <i class="fas fa-brain"></i>
-            </div>
-
-            <div>
-                <h4 class="mb-0">AI Adaptive Decision</h4>
-                <small class="text-muted">
-                    Personalized using employee memory, performance and learning signals
-                </small>
-            </div>
-        </div>
-
-
-        <div class="row g-3">
-
-            <!-- Risk -->
-            <div class="col-md-3">
-                <div class="bg-white rounded p-3 h-100">
-                    <small class="text-muted">Risk Level</small>
-
-                    <h5 class="mt-1 mb-0 text-capitalize">
-                        {{ memory.risk_level or 'low' }}
-                    </h5>
-
-                    {% if memory.risk_level == 'high' %}
-                    <small class="text-danger">
-                        <i class="fas fa-exclamation-triangle me-1"></i>
-                        Immediate support required
-                    </small>
-
-                    {% elif memory.risk_level == 'medium' %}
-                    <small class="text-warning">
-                        <i class="fas fa-exclamation-circle me-1"></i>
-                        Additional guidance recommended
-                    </small>
-
-                    {% else %}
-                    <small class="text-success">
-                        <i class="fas fa-check-circle me-1"></i>
-                        Progressing normally
-                    </small>
-                    {% endif %}
+<!-- Employee Profile Header -->
+<div class="glass-card mb-4">
+    <div class="card-body-clean p-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="avatar-circle" style="width: 56px; height: 56px; font-size: 1.4rem;">
+                    {{ employee.name[:2]|upper }}
+                </div>
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <h1 class="page-title mb-0" style="font-size: 1.5rem;">{{ employee.name }}</h1>
+                        <span class="badge-status badge-neutral">{{ employee.department }}</span>
+                        {% if employee.onboarding_status == 'completed' %}
+                        <span class="badge-status badge-success"><span class="badge-status-dot"></span>Completed</span>
+                        {% elif employee.onboarding_status == 'in_progress' %}
+                        <span class="badge-status badge-warning"><span class="badge-status-dot"></span>In Progress</span>
+                        {% else %}
+                        <span class="badge-status badge-neutral"><span class="badge-status-dot"></span>{{ employee.onboarding_status or 'Pending' }}</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-muted small mb-0">
+                        <i class="fas fa-briefcase me-1"></i> {{ employee.position }} · 
+                        <i class="fas fa-envelope me-1 ms-2"></i> {{ employee.email }}
+                    </p>
                 </div>
             </div>
 
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end">
+                    <div class="kpi-value" style="color: var(--brand-primary); font-size: 2rem;">
+                        {{ '%.0f'|format(completion_percentage or 0) }}%
+                    </div>
+                    <small class="text-muted" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Curriculum Completion</small>
+                </div>
+                <div class="progress" style="width: 80px; height: 8px; border-radius: 4px; background: #f1f5f9;">
+                    <div class="progress-bar" style="width: {{ completion_percentage or 0 }}%; background-color: var(--brand-primary); border-radius: 4px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Adaptive Decision Banner -->
+<div class="glass-card mb-4" style="border-left: 4px solid var(--brand-primary);">
+    <div class="card-header-clean">
+        <div class="d-flex align-items-center gap-2">
+            <div class="kpi-icon-pill kpi-icon-teal" style="width: 32px; height: 32px;">
+                <i class="fas fa-brain" style="font-size: 0.85rem;"></i>
+            </div>
+            <div>
+                <h5 class="section-title mb-0">AI Adaptive Learning Decision</h5>
+                <small class="text-muted" style="font-size: 0.775rem;">Calculated using persistent digital memory and assessment signals</small>
+            </div>
+        </div>
+        <span class="badge-status badge-info">Real-time Policy</span>
+    </div>
+    <div class="card-body-clean">
+        <div class="row g-3 mb-4">
+            <!-- Risk -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="p-3 rounded h-100" style="background: #ffffff; border: 1px solid var(--brand-border);">
+                    <small class="text-muted fw-semibold" style="font-size: 0.75rem; text-transform: uppercase;">Risk Level</small>
+                    <div class="mt-1 mb-1">
+                        {% if memory.risk_level == 'high' %}
+                        <span class="badge-status badge-danger"><span class="badge-status-dot"></span>High Risk</span>
+                        {% elif memory.risk_level == 'medium' %}
+                        <span class="badge-status badge-warning"><span class="badge-status-dot"></span>Medium Risk</span>
+                        {% else %}
+                        <span class="badge-status badge-success"><span class="badge-status-dot"></span>Low Risk</span>
+                        {% endif %}
+                    </div>
+                    <small class="text-muted" style="font-size: 0.75rem;">
+                        {% if memory.risk_level == 'high' %}Immediate mentor guidance required
+                        {% elif memory.risk_level == 'medium' %}Supplementary coaching suggested
+                        {% else %}Progressing on track{% endif %}
+                    </small>
+                </div>
+            </div>
 
             <!-- Confidence -->
-            <div class="col-md-3">
-                <div class="bg-white rounded p-3 h-100">
-                    <small class="text-muted">AI Confidence</small>
-
-                    <h5 class="mt-1 mb-0">
+            <div class="col-sm-6 col-lg-3">
+                <div class="p-3 rounded h-100" style="background: #ffffff; border: 1px solid var(--brand-border);">
+                    <small class="text-muted fw-semibold" style="font-size: 0.75rem; text-transform: uppercase;">AI Confidence</small>
+                    <h4 class="mt-1 mb-1" style="font-weight: 800; color: var(--brand-secondary);">
                         {{ '%.0f'|format((memory.confidence_score or 0) * 100) }}%
-                    </h5>
-
-                    <small class="text-muted">
-                        Based on learning progress
-                    </small>
+                    </h4>
+                    <small class="text-muted" style="font-size: 0.75rem;">Evaluated from test responses</small>
                 </div>
             </div>
-
 
             <!-- Learning Style -->
-            <div class="col-md-3">
-                <div class="bg-white rounded p-3 h-100">
-                    <small class="text-muted">Learning Style</small>
-
-                    <h5 class="mt-1 mb-0 text-capitalize">
-                        {{ (memory.preferred_learning_style or 'mixed').replace('_', ' ') }}
-                    </h5>
-
-                    <small class="text-muted">
-                        Used to personalize activities
-                    </small>
+            <div class="col-sm-6 col-lg-3">
+                <div class="p-3 rounded h-100" style="background: #ffffff; border: 1px solid var(--brand-border);">
+                    <small class="text-muted fw-semibold" style="font-size: 0.75rem; text-transform: uppercase;">Learning Style</small>
+                    <div class="mt-1 mb-1">
+                        <span class="badge-status badge-info" style="font-size: 0.8rem;">
+                            {{ (memory.preferred_learning_style or 'mixed').replace('_', ' ')|capitalize }}
+                        </span>
+                    </div>
+                    <small class="text-muted" style="font-size: 0.75rem;">Shapes content formats</small>
                 </div>
             </div>
 
-
-            <!-- Adaptive Action -->
-            <div class="col-md-3">
-                <div class="bg-white rounded p-3 h-100">
-                    <small class="text-muted">Next AI Action</small>
-
-                    {% if memory.weak_topics %}
-                        <h5 class="mt-1 mb-0">
+            <!-- Next AI Action -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="p-3 rounded h-100" style="background: #ffffff; border: 1px solid var(--brand-border);">
+                    <small class="text-muted fw-semibold" style="font-size: 0.75rem; text-transform: uppercase;">Next AI Action</small>
+                    <div class="mt-1 mb-1 fw-bold text-secondary">
+                        {% if memory.weak_topics %}
                             Remedial Learning
-                        </h5>
-                        <small class="text-primary">
-                            Focus on knowledge gaps
-                        </small>
-
-                    {% elif (memory.confidence_score or 0) > 0.8 %}
-                        <h5 class="mt-1 mb-0">
-                            Accelerate
-                        </h5>
-                        <small class="text-success">
-                            Move to advanced modules
-                        </small>
-
-                    {% else %}
-                        <h5 class="mt-1 mb-0">
+                        {% elif (memory.confidence_score or 0) > 0.8 %}
+                            Accelerated Track
+                        {% else %}
                             Guided Learning
-                        </h5>
-                        <small class="text-primary">
-                            Continue personalized path
-                        </small>
+                        {% endif %}
+                    </div>
+                    <small class="text-muted" style="font-size: 0.75rem;">
+                        {% if memory.weak_topics %}Bridge knowledge gaps
+                        {% elif (memory.confidence_score or 0) > 0.8 %}Advance to advanced modules
+                        {% else %}Maintain scheduled curriculum{% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adaptive Rationale -->
+        <div class="p-3 rounded" style="background: rgba(240, 253, 250, 0.6); border: 1px solid rgba(15, 118, 110, 0.2);">
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="fas fa-lightbulb text-warning" style="color: var(--color-warning) !important;"></i>
+                <span class="fw-bold small text-secondary">Adaptive Policy Rationale:</span>
+            </div>
+            <p class="small text-muted mb-0">
+                {% if memory.weak_topics %}
+                Identified knowledge gaps in <strong>{{ memory.weak_topics|join(', ') }}</strong>. The autonomous planner adapted the trajectory to reinforce core concepts with supplementary micro-quizzes.
+                {% elif (memory.confidence_score or 0) > 0.8 %}
+                Strong mastery demonstrated across primary domains. Accelerated progression enabled for advanced departmental topics.
+                {% else %}
+                Steady onboarding progress. The mentor agent continues to log retention rates and provide contextual support.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Adaptive Mentor Memory & Progress Timeline -->
+<div class="row g-4 mb-4">
+    <!-- Mentor Memory -->
+    <div class="col-lg-6">
+        <div class="glass-card h-100">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-brain text-teal" style="color: var(--brand-primary) !important;"></i>
+                    <h5 class="section-title">Adaptive Mentor Memory</h5>
+                </div>
+                <span class="badge-status badge-neutral">Digital Twin</span>
+            </div>
+            <div class="card-body-clean">
+                <div class="mb-3">
+                    <span class="text-muted small fw-semibold d-block mb-1">Demonstrated Strengths:</span>
+                    {% if memory.strong_topics %}
+                        {% for s in memory.strong_topics %}
+                        <span class="badge-status badge-success me-1 mb-1">{{ s }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="text-muted small">No verified strengths logged yet.</span>
                     {% endif %}
                 </div>
-            </div>
 
-        </div>
-
-
-        <!-- Reasoning -->
-        <div class="mt-4 p-3 rounded bg-white">
-
-            <div class="fw-semibold mb-2">
-                <i class="fas fa-lightbulb text-warning me-2"></i>
-                Why is the AI adapting this way?
-            </div>
-
-            {% if memory.weak_topics %}
-
-                <p class="mb-2">
-                    The system detected knowledge gaps in:
-                    <strong>{{ memory.weak_topics|join(', ') }}</strong>.
-                </p>
-
-                <div class="text-primary">
-                    <i class="fas fa-arrow-right me-2"></i>
-                    The onboarding path is being adapted with additional practice
-                    and remedial learning.
-                </div>
-
-            {% elif (memory.confidence_score or 0) > 0.8 %}
-
-                <p class="mb-2">
-                    The employee is demonstrating strong learning confidence.
-                </p>
-
-                <div class="text-success">
-                    <i class="fas fa-arrow-right me-2"></i>
-                    The system can accelerate the employee toward advanced,
-                    role-specific content.
-                </div>
-
-            {% else %}
-
-                <p class="mb-2">
-                    The employee is progressing through the onboarding journey.
-                </p>
-
-                <div class="text-primary">
-                    <i class="fas fa-arrow-right me-2"></i>
-                    The AI will continue monitoring performance and adapt
-                    the next learning step.
-                </div>
-
-            {% endif %}
-
-        </div>
-
-    </div>
-</div>
-
-
-<!-- Key Metrics -->
-<div class="row mb-4">
-
-    <div class="col-md-3 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="text-muted">Confidence</div>
-                <h4>
-                    {{ '%.0f'|format((memory.confidence_score or 0) * 100) }}%
-                </h4>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-3 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="text-muted">Engagement</div>
-                <h4>
-                    {{ '%.0f'|format((memory.engagement_score or 0) * 100) }}%
-                </h4>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-3 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="text-muted">Risk</div>
-                <h4 class="text-capitalize">
-                    {{ memory.risk_level or 'low' }}
-                </h4>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-3 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="text-muted">Learning Style</div>
-                <h5 class="mb-0">
-                    {{ (memory.preferred_learning_style or 'mixed').replace('_', ' ') }}
-                </h5>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-
-<!-- Adaptive Mentor Memory -->
-<div class="row mb-4">
-
-    <div class="col-lg-6 mb-3">
-
-        <div class="card h-100">
-
-            <div class="card-header bg-white">
-                <strong>
-                    <i class="fas fa-brain me-2 text-primary"></i>
-                    Adaptive Mentor Memory
-                </strong>
-            </div>
-
-            <div class="card-body">
-
-                <p>
-                    <strong>Strong topics:</strong>
-                    {{ memory.strong_topics|join(', ')
-                       if memory.strong_topics else '—' }}
-                </p>
-
-                <p>
-                    <strong>Weak topics:</strong>
-                    {{ memory.weak_topics|join(', ')
-                       if memory.weak_topics else '—' }}
-                </p>
-
-                <p><strong>Recommendations:</strong></p>
-
-                <ul>
-                    {% for r in memory.recommended_next_modules or [] %}
-                    <li>{{ r }}</li>
+                <div class="mb-3">
+                    <span class="text-muted small fw-semibold d-block mb-1">Identified Knowledge Gaps:</span>
+                    {% if memory.weak_topics %}
+                        {% for w in memory.weak_topics %}
+                        <span class="badge-status badge-warning me-1 mb-1">{{ w }}</span>
+                        {% endfor %}
                     {% else %}
-                    <li class="text-muted">
-                        Run onboarding to generate mentor recommendations.
-                    </li>
-                    {% endfor %}
-                </ul>
+                        <span class="text-muted small">No critical knowledge gaps.</span>
+                    {% endif %}
+                </div>
 
-                <p class="mb-1">
-                    <strong>Personalized Roadmap</strong>
-                </p>
+                <div class="mb-3">
+                    <span class="text-muted small fw-semibold d-block mb-1">Mentor Recommendations:</span>
+                    <ul class="list-unstyled mb-0 d-flex flex-column gap-1">
+                        {% for r in memory.recommended_next_modules or [] %}
+                        <li class="small text-secondary"><i class="fas fa-check-circle text-teal me-2" style="color: var(--brand-primary);"></i>{{ r }}</li>
+                        {% else %}
+                        <li class="text-muted small">Trigger onboarding to generate mentor guidance.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
 
-                {% for step in memory.personalized_roadmap or [] %}
-
-                <span class="badge bg-light text-dark me-1 mb-1">
-                    {{ step.module }} ({{ step.action }})
-                </span>
-
-                {% else %}
-
-                <span class="text-muted">
-                    Roadmap will appear after onboarding.
-                </span>
-
-                {% endfor %}
-
+                <div>
+                    <span class="text-muted small fw-semibold d-block mb-1">Personalized Learning Roadmap:</span>
+                    <div class="d-flex flex-wrap gap-1">
+                        {% for step in memory.personalized_roadmap or [] %}
+                        <span class="badge-status badge-neutral" style="font-size: 0.725rem;">
+                            {{ step.module }} ({{ step.action }})
+                        </span>
+                        {% else %}
+                        <span class="text-muted small">Roadmap dynamically constructs during agent run.</span>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-
         </div>
-
     </div>
-
 
     <!-- Progress Timeline -->
-
-    <div class="col-lg-6 mb-3">
-
-        <div class="card h-100">
-
-            <div class="card-header bg-white">
-                <strong>
-                    <i class="fas fa-stream me-2 text-primary"></i>
-                    Progress Timeline
-                </strong>
-            </div>
-
-            <div class="card-body">
-
-                {% for event in timeline %}
-
-                <div class="timeline-item">
-
-                    <div class="fw-semibold">
-                        {{ event.label }}
-                    </div>
-
-                    <small class="text-muted">
-                        {{ event.at }} · {{ event.type }}
-                    </small>
-
+    <div class="col-lg-6">
+        <div class="glass-card h-100">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-stream text-teal" style="color: var(--brand-primary) !important;"></i>
+                    <h5 class="section-title">Progress Timeline</h5>
                 </div>
-
-                {% else %}
-
-                <p class="text-muted mb-0">
-                    No timeline events yet.
-                </p>
-
-                {% endfor %}
-
+                <span class="badge-status badge-neutral">{{ timeline|length }} Events</span>
             </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- Quiz Results + Agent Activity -->
-
-<div class="row mb-4">
-
-    <div class="col-lg-6 mb-3">
-
-        <div class="card h-100">
-
-            <div class="card-header bg-white">
-                <strong>
-                    <i class="fas fa-clipboard-check me-2 text-primary"></i>
-                    Quiz Results
-                </strong>
-            </div>
-
-            <div class="card-body">
-
-                {% if quiz_results %}
-
-                <ul class="list-group list-group-flush">
-
-                    {% for q in quiz_results %}
-
-                    <li class="list-group-item d-flex justify-content-between">
-
-                        <span>
-                            Score {{ q.score }} /
-                            {{ q.total_questions }}
-                        </span>
-
-                        <small class="text-muted">
-                            {{ q.completed_at }}
-                        </small>
-
-                    </li>
-
+            <div class="card-body-clean">
+                {% if timeline %}
+                <div class="d-flex flex-column gap-3">
+                    {% for event in timeline %}
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="avatar-circle" style="width: 28px; height: 28px; font-size: 0.7rem; background: var(--brand-primary);">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold text-secondary small">{{ event.label }}</div>
+                            <small class="text-muted" style="font-size: 0.75rem;">{{ event.at }} · {{ event.type }}</small>
+                        </div>
+                    </div>
                     {% endfor %}
-
-                </ul>
-
-                {% else %}
-
-                <p class="text-muted mb-0">
-                    No quizzes yet.
-                </p>
-
-                {% endif %}
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="col-lg-6 mb-3">
-
-        <div class="card h-100">
-
-            <div class="card-header bg-white">
-                <strong>
-                    <i class="fas fa-network-wired me-2 text-primary"></i>
-                    Agent Activity Logs
-                </strong>
-            </div>
-
-            <div class="card-body">
-
-                {% for t in traces %}
-
-                <div class="border-bottom py-2">
-
-                    <div class="d-flex justify-content-between">
-
-                        <span class="fw-semibold">
-                            {{ t.trace_id[:8] }}…
-                        </span>
-
-                        <span class="badge
-                            {% if t.status == 'ok' %}
-                                bg-success
-                            {% else %}
-                                bg-danger
-                            {% endif %}
-                        ">
-                            {{ t.status }}
-                        </span>
-
-                    </div>
-
-                    <small class="text-muted">
-                        {{ t.duration_ms }} ms ·
-                        tokens {{ t.total_tokens_estimate }}
-                    </small>
-
                 </div>
-
                 {% else %}
-
-                <p class="text-muted mb-0">
-                    No agent runs for this employee yet.
-                </p>
-
-                {% endfor %}
-
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="empty-state-title">No timeline events yet</div>
+                    <div class="empty-state-desc">Milestones log automatically as assessments and modules complete.</div>
+                </div>
+                {% endif %}
             </div>
-
         </div>
+    </div>
+</div>
 
+<!-- Bottom Section: Quiz Results & Agent Activity Logs -->
+<div class="row g-4 mb-4">
+    <!-- Quiz Results -->
+    <div class="col-lg-6">
+        <div class="glass-card h-100">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-clipboard-check text-teal" style="color: var(--brand-primary) !important;"></i>
+                    <h5 class="section-title">Quiz Results</h5>
+                </div>
+                <span class="badge-status badge-neutral">{{ quiz_results|length }} Completed</span>
+            </div>
+            <div class="card-body-clean">
+                {% if quiz_results %}
+                <div class="d-flex flex-column gap-2">
+                    {% for q in quiz_results %}
+                    <div class="d-flex justify-content-between align-items-center p-2 rounded" style="background: #ffffff; border: 1px solid var(--brand-border);">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge-status badge-success">Score {{ q.score }}/{{ q.total_questions }}</span>
+                        </div>
+                        <small class="text-muted" style="font-size: 0.75rem;">{{ q.completed_at }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="empty-state-title">No quizzes recorded</div>
+                    <div class="empty-state-desc">Interactive quizzes will be scheduled during the onboarding workflow.</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 
+    <!-- Agent Activity Logs -->
+    <div class="col-lg-6">
+        <div class="glass-card h-100">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-network-wired text-teal" style="color: var(--brand-primary) !important;"></i>
+                    <h5 class="section-title">Agent Execution Traces</h5>
+                </div>
+                <span class="badge-status badge-neutral">{{ traces|length }} Traces</span>
+            </div>
+            <div class="card-body-clean">
+                {% if traces %}
+                <div class="d-flex flex-column gap-2">
+                    {% for t in traces %}
+                    <div class="p-2 rounded" style="background: #ffffff; border: 1px solid var(--brand-border);">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <code class="activity-trace-badge">{{ t.trace_id[:12] }}…</code>
+                            {% if t.status == 'ok' %}
+                            <span class="badge-status badge-success"><span class="badge-status-dot"></span>OK</span>
+                            {% else %}
+                            <span class="badge-status badge-danger"><span class="badge-status-dot"></span>{{ t.status }}</span>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted" style="font-size: 0.75rem;">{{ t.duration_ms }} ms · {{ t.total_tokens_estimate }} tokens</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <div class="empty-state-title">No agent runs recorded</div>
+                    <div class="empty-state-desc">Traces will display multi-agent timing and token metrics.</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 
-
-<!-- Actions -->
-
-<div class="d-flex gap-2">
-
-    <button
-        class="btn btn-primary"
-        onclick="startOnboarding({{ employee.id }})">
-
-        <i class="fas fa-robot me-2"></i>
-        Run Autonomous Onboarding
-
+<!-- Action Bar -->
+<div class="d-flex flex-wrap gap-2">
+    <button class="btn btn-primary" onclick="startOnboarding({{ employee.id }})">
+        <i class="fas fa-play"></i>
+        <span>Run Autonomous Onboarding</span>
     </button>
-
-    <a href="/dashboard" class="btn btn-outline-secondary">
-        Back
+    <a href="/dashboard" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Dashboard</span>
     </a>
-
 </div>
-
 {% endblock %}
 
-
 {% block scripts %}
-
 <script>
-
 async function startOnboarding(id) {
-
-    if (!confirm('Start planner-driven autonomous onboarding?')) return;
+    if (!confirm('Start planner-driven autonomous onboarding workflow for {{ employee.name }}?')) return;
 
     const button = event?.target?.closest('button');
-
+    let origText = '';
     if (button) {
         button.disabled = true;
-        button.innerHTML =
-            '<i class="fas fa-spinner fa-spin me-2"></i>AI Agents Working...';
+        origText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI Agents Working...';
     }
 
-    const res = await fetch(
-        `/employees/${id}/start-onboarding`,
-        { method: 'POST' }
-    );
-
-    const data = await res.json();
-
-    if (res.ok) {
-
-        location.reload();
-
-    } else {
-
-        alert(data.detail || 'Failed');
-
+    try {
+        const res = await fetch(`/employees/${id}/start-onboarding`, { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+            location.reload();
+        } else {
+            alert(data.detail || 'Autonomous onboarding workflow failed.');
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = origText;
+            }
+        }
+    } catch (err) {
+        alert('Network error: ' + err.message);
         if (button) {
             button.disabled = false;
-            button.innerHTML =
-                '<i class="fas fa-robot me-2"></i>Run Autonomous Onboarding';
+            button.innerHTML = origText;
         }
-
     }
-
 }
-
 </script>
-
 {% endblock %}

@@ -3,110 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Adaptive AI Employee Success Platform{% endblock %}</title>
+    <title>{% block title %}AetherSuccess – Adaptive AI Employee Success Platform{% endblock %}</title>
+    <!-- Modern Font & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --brand-1: #0f766e;
-            --brand-2: #134e4a;
-            --accent: #f59e0b;
-        }
-        .sidebar {
-            min-height: 100vh;
-            background: linear-gradient(160deg, var(--brand-2) 0%, var(--brand-1) 55%, #115e59 100%);
-        }
-        .main-content {
-            background: radial-gradient(circle at top right, #ecfdf5 0%, #f8fafc 45%, #f1f5f9 100%);
-            min-height: 100vh;
-        }
-        .card {
-            border: none;
-            border-radius: 14px;
-            box-shadow: 0 8px 24px rgba(15, 118, 110, 0.08);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
-            border: none;
-        }
-        .brand-badge {
-            background: rgba(245, 158, 11, 0.15);
-            color: #92400e;
-            border-radius: 999px;
-            padding: 0.2rem 0.7rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        .timeline-item {
-            border-left: 3px solid var(--brand-1);
-            padding-left: 1rem;
-            margin-bottom: 1rem;
-        }
-        .nav-link.active-nav {
-            background: rgba(255,255,255,0.12);
-            border-radius: 8px;
-        }
-    </style>
+    <!-- Platform Design System -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-3 col-lg-2 sidebar text-white p-3">
-                <div class="d-flex align-items-center mb-2">
-                    <i class="fas fa-brain fa-2x me-2"></i>
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <!-- Sleek AI SaaS Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar-container">
+                <!-- Branding Header -->
+                <div class="brand-header">
+                    <div class="brand-icon-box">
+                        <i class="fas fa-brain"></i>
+                    </div>
                     <div>
-                        <h5 class="mb-0">AetherSuccess</h5>
-                        <small class="opacity-75">Adaptive AI Mentor</small>
+                        <h1 class="brand-name">AetherSuccess</h1>
+                        <span class="brand-subtext">Adaptive AI Platform</span>
                     </div>
                 </div>
-                <span class="brand-badge mb-4 d-inline-block">Employee Success Platform</span>
 
-                <nav class="nav flex-column gap-1">
-                    <a class="nav-link text-white" href="/">
-                        <i class="fas fa-home me-2"></i>Home
+                <!-- Status Pill -->
+                <div class="brand-pill-badge">
+                    <span>Autonomous Multi-Agent</span>
+                </div>
+
+                <!-- Navigation List -->
+                <nav class="sidebar-nav" id="sidebarNav">
+                    <a class="nav-link-custom" href="/" data-path="/">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
                     </a>
-                    <a class="nav-link text-white" href="/dashboard">
-                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    <a class="nav-link-custom" href="/dashboard" data-path="/dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
                     </a>
-                    <a class="nav-link text-white" href="/insights">
-                        <i class="fas fa-chart-line me-2"></i>Manager Insights
+                    <a class="nav-link-custom" href="/insights" data-path="/insights">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Manager Insights</span>
                     </a>
-                    <a class="nav-link text-white" href="/knowledge">
-                        <i class="fas fa-book me-2"></i>Knowledge Base
+                    <a class="nav-link-custom" href="/knowledge" data-path="/knowledge">
+                        <i class="fas fa-book"></i>
+                        <span>Knowledge Base</span>
                     </a>
-                    <a class="nav-link text-white" href="#" onclick="showAddEmployeeModal()">
-                        <i class="fas fa-user-plus me-2"></i>Add Employee
+                    <a class="nav-link-custom" href="#" onclick="showAddEmployeeModal(); return false;">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add Employee</span>
                     </a>
                 </nav>
+
+                <!-- System Status Footer -->
+                <div class="mt-auto pt-4" style="border-top: 1px solid var(--sidebar-border);">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge-status-dot" style="background: #10b981; width: 8px; height: 8px; box-shadow: 0 0 8px #10b981;"></span>
+                        <small style="color: #94a3b8; font-size: 0.75rem; font-weight: 500;">Agents Active & Ready</small>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-9 col-lg-10 main-content p-4">
+            <!-- Main Content Area -->
+            <div class="col-md-9 col-lg-10 p-4 p-xl-5" style="min-height: 100vh;">
                 {% block content %}{% endblock %}
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="addEmployeeModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New Employee</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <!-- Redesigned Subtle Glassmorphism Add Employee Modal -->
+    <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 480px;">
+            <div class="modal-content modal-content-glass">
+                <div class="modal-header-clean">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="kpi-icon-pill kpi-icon-teal" style="width: 32px; height: 32px;">
+                            <i class="fas fa-user-plus" style="font-size: 0.85rem;"></i>
+                        </div>
+                        <h5 class="section-title mb-0" id="addEmployeeModalLabel">Add New Employee</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 0.8rem;"></button>
                 </div>
-                <div class="modal-body">
-                    <form id="addEmployeeForm">
+                <div class="modal-body-clean">
+                    <form id="addEmployeeForm" onsubmit="event.preventDefault(); addEmployee();">
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="name" required>
+                            <input type="text" class="form-control" id="name" placeholder="e.g. Alex Rivera" required autocomplete="name">
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" required>
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" placeholder="e.g. alex.rivera@company.com" required autocomplete="email">
                         </div>
                         <div class="mb-3">
                             <label for="department" class="form-label">Department</label>
-                            <select class="form-control" id="department" required>
-                                <option value="">Select Department</option>
+                            <select class="form-select" id="department" required>
+                                <option value="" disabled selected>Select department...</option>
                                 <option value="Engineering">Engineering</option>
                                 <option value="Sales">Sales</option>
                                 <option value="HR">HR</option>
@@ -114,33 +109,65 @@
                                 <option value="Finance">Finance</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="position" class="form-label">Position</label>
-                            <input type="text" class="form-control" id="position" required>
+                        <div class="mb-2">
+                            <label for="position" class="form-label">Position / Role</label>
+                            <input type="text" class="form-control" id="position" placeholder="e.g. Senior Frontend Engineer" required>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer-clean">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="addEmployee()">Add Employee</button>
+                    <button type="button" class="btn btn-primary" id="btnSubmitAddEmployee" onclick="addEmployee()">
+                        <i class="fas fa-check"></i>
+                        <span>Add Employee</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Highlight active navigation item based on current URL path
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.sidebar-nav .nav-link-custom');
+            navLinks.forEach(link => {
+                const targetPath = link.getAttribute('data-path');
+                if (targetPath === '/' && currentPath === '/') {
+                    link.classList.add('active');
+                } else if (targetPath && targetPath !== '/' && currentPath.startsWith(targetPath)) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        });
+
         function showAddEmployeeModal() {
-            new bootstrap.Modal(document.getElementById('addEmployeeModal')).show();
+            const modalEl = document.getElementById('addEmployeeModal');
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.show();
         }
 
         async function addEmployee() {
-            const employeeData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                department: document.getElementById('department').value,
-                position: document.getElementById('position').value
-            };
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const department = document.getElementById('department').value;
+            const position = document.getElementById('position').value.trim();
+
+            if (!name || !email || !department || !position) {
+                alert('Please fill in all employee fields.');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitAddEmployee');
+            const originalContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+            const employeeData = { name, email, department, position };
 
             try {
                 const response = await fetch('/employees/', {
@@ -148,10 +175,18 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(employeeData)
                 });
-                if (response.ok) location.reload();
-                else alert('Error adding employee');
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    const err = await response.json();
+                    alert('Error adding employee: ' + (err.detail || 'Failed'));
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                }
             } catch (error) {
-                alert('Error: ' + error.message);
+                alert('Network error: ' + error.message);
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
             }
         }
     </script>

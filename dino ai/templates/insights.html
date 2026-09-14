@@ -3,145 +3,328 @@
 {% block title %}Manager Insights - AetherSuccess{% endblock %}
 
 {% block content %}
+<!-- Page Header -->
 <div class="mb-4">
-    <h2 class="mb-1"><i class="fas fa-chart-line me-2"></i>Manager Insights</h2>
-    <p class="text-muted mb-0">Completion rates, risk prediction, knowledge gaps, and AI recommendations</p>
+    <h1 class="page-title"><i class="fas fa-chart-line me-2 text-primary" style="color: var(--brand-primary) !important;"></i>Manager Insights & Learning Analytics</h1>
+    <p class="page-subtitle">Organizational onboarding health, AI risk assessment, and mentor recommendations</p>
 </div>
 
-<div class="row mb-4">
-    <div class="col-md-3 mb-3">
-        <div class="card h-100"><div class="card-body">
-            <div class="text-muted">Completion rate</div>
-            <h2>{{ completion_rate }}%</h2>
-        </div></div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="card h-100"><div class="card-body">
-            <div class="text-muted">Avg confidence</div>
-            <h2>{{ '%.0f'|format((insights.avg_confidence or 0) * 100) }}%</h2>
-        </div></div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="card h-100"><div class="card-body">
-            <div class="text-muted">Avg engagement</div>
-            <h2>{{ '%.0f'|format((insights.avg_engagement or 0) * 100) }}%</h2>
-        </div></div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="card h-100"><div class="card-body">
-            <div class="text-muted">Profiles tracked</div>
-            <h2>{{ insights.profiles_tracked }}</h2>
-        </div></div>
-    </div>
-</div>
-
-<div class="row mb-4">
-    <div class="col-lg-6 mb-3">
-        <div class="card h-100">
-            <div class="card-header bg-white"><strong>Employees Needing Assistance</strong></div>
-            <div class="card-body">
-                {% if insights.employees_needing_assistance %}
-                {% for item in insights.employees_needing_assistance %}
-                {% set emp = employees|selectattr('id', 'equalto', item.employee_id)|list|first %}
-                <div class="border rounded p-3 mb-2">
-                    <div class="d-flex justify-content-between">
-                        <strong>{{ emp.name if emp else ('Employee #' ~ item.employee_id) }}</strong>
-                        <span class="badge {% if item.risk_level == 'high' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ item.risk_level }} risk</span>
-                    </div>
-                    <small class="text-muted">Weak: {{ item.weak_topics|join(', ') if item.weak_topics else '—' }}</small>
-                    <div class="mt-1">
-                        {% for rec in item.recommendations[:3] %}
-                        <span class="badge bg-light text-dark">{{ rec }}</span>
-                        {% endfor %}
-                    </div>
-                    <a class="small" href="/employees/{{ item.employee_id }}">Open profile →</a>
+<!-- Top Analytics KPI Cards -->
+<div class="row g-3 mb-4">
+    <!-- Card 1: Completion Rate -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span class="kpi-label">Completion Rate</span>
+                <div class="kpi-icon-pill kpi-icon-teal">
+                    <i class="fas fa-graduation-cap"></i>
                 </div>
-                {% endfor %}
+            </div>
+            <div class="kpi-value">{{ completion_rate }}%</div>
+            <div class="kpi-subtext">Overall curriculum progress</div>
+        </div>
+    </div>
+
+    <!-- Card 2: Avg Confidence -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span class="kpi-label">Avg Confidence</span>
+                <div class="kpi-icon-pill kpi-icon-success">
+                    <i class="fas fa-smile"></i>
+                </div>
+            </div>
+            <div class="kpi-value">{{ '%.0f'|format((insights.avg_confidence or 0) * 100) }}%</div>
+            <div class="kpi-subtext">Aggregated learning confidence</div>
+        </div>
+    </div>
+
+    <!-- Card 3: Avg Engagement -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span class="kpi-label">Avg Engagement</span>
+                <div class="kpi-icon-pill kpi-icon-info">
+                    <i class="fas fa-bolt"></i>
+                </div>
+            </div>
+            <div class="kpi-value">{{ '%.0f'|format((insights.avg_engagement or 0) * 100) }}%</div>
+            <div class="kpi-subtext">Quiz & material interaction rate</div>
+        </div>
+    </div>
+
+    <!-- Card 4: Profiles Tracked -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span class="kpi-label">Profiles Tracked</span>
+                <div class="kpi-icon-pill kpi-icon-warning">
+                    <i class="fas fa-user-check"></i>
+                </div>
+            </div>
+            <div class="kpi-value">{{ insights.profiles_tracked }}</div>
+            <div class="kpi-subtext">Active memory instances</div>
+        </div>
+    </div>
+</div>
+
+<!-- Section: Employees Needing Assistance & Knowledge Gap Analysis -->
+<div class="row g-4 mb-4">
+    <!-- Employees Needing Assistance -->
+    <div class="col-lg-6">
+        <div class="glass-card h-100">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-user-shield text-danger" style="color: var(--color-danger) !important;"></i>
+                    <h5 class="section-title">Employees Needing Assistance</h5>
+                </div>
+                <span class="badge-status badge-danger">
+                    {{ insights.employees_needing_assistance|length }} Flagged
+                </span>
+            </div>
+            <div class="card-body-clean">
+                {% if insights.employees_needing_assistance %}
+                <div class="d-flex flex-column gap-3">
+                    {% for item in insights.employees_needing_assistance %}
+                    {% set emp = employees|selectattr('id', 'equalto', item.employee_id)|list|first %}
+                    <div class="p-3 rounded" style="background: #ffffff; border: 1px solid var(--brand-border);">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="avatar-circle" style="width: 32px; height: 32px; font-size: 0.75rem;">
+                                    {{ (emp.name if emp else 'E')[:2]|upper }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-secondary" style="font-size: 0.9rem;">
+                                        {{ emp.name if emp else ('Employee #' ~ item.employee_id) }}
+                                    </div>
+                                    <small class="text-muted">{{ emp.department if emp else 'General' }}</small>
+                                </div>
+                            </div>
+                            <span class="badge-status {% if item.risk_level == 'high' %}badge-danger{% else %}badge-warning{% endif %}">
+                                <span class="badge-status-dot"></span>
+                                {{ item.risk_level }} Risk
+                            </span>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted d-block mb-1">Identified Gaps:</small>
+                            {% if item.weak_topics %}
+                                {% for t in item.weak_topics %}
+                                <span class="badge-status badge-neutral me-1" style="font-size: 0.7rem;">{{ t }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-muted small">—</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between pt-2 border-top">
+                            <small class="text-muted">Recommendations: {{ item.recommendations|length }} actions</small>
+                            <a class="btn btn-secondary btn-sm" href="/employees/{{ item.employee_id }}">
+                                Open Profile →
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
                 {% else %}
-                <p class="text-muted mb-0">No at-risk employees detected.</p>
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="empty-state-title">No at-risk employees detected</div>
+                    <div class="empty-state-desc">All employees are progressing comfortably through their learning journeys.</div>
+                </div>
                 {% endif %}
             </div>
         </div>
     </div>
-    <div class="col-lg-6 mb-3">
-        <div class="card h-100">
-            <div class="card-header bg-white"><strong>Knowledge Gap Analysis</strong></div>
-            <div class="card-body">
-                {% for gap in insights.knowledge_gaps %}
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1">
-                        <span>{{ gap.topic }}</span>
-                        <span>{{ gap.employees_affected }}</span>
+
+    <!-- Knowledge Gap Analysis -->
+    <div class="col-lg-6">
+        <div class="glass-card h-100">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-chart-pie text-warning" style="color: var(--color-warning) !important;"></i>
+                    <h5 class="section-title">Knowledge Gap Analysis</h5>
+                </div>
+                <span class="text-muted small">Topic distribution</span>
+            </div>
+            <div class="card-body-clean">
+                {% if insights.knowledge_gaps %}
+                <div class="d-flex flex-column gap-3">
+                    {% for gap in insights.knowledge_gaps %}
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-semibold text-secondary small">{{ gap.topic }}</span>
+                            <span class="badge-status badge-warning" style="font-size: 0.7rem;">
+                                {{ gap.employees_affected }} affected
+                            </span>
+                        </div>
+                        <div class="progress" style="height: 6px; border-radius: 4px; background-color: #f1f5f9;">
+                            <div class="progress-bar" style="width: {{ [gap.employees_affected * 25, 100]|min }}%; background-color: var(--color-warning); border-radius: 4px;"></div>
+                        </div>
                     </div>
-                    <div class="progress" style="height:8px;">
-                        <div class="progress-bar bg-warning" style="width: {{ [gap.employees_affected * 20, 100]|min }}%"></div>
-                    </div>
+                    {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-muted mb-0">Gaps appear after quizzes update digital memory.</p>
-                {% endfor %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <div class="empty-state-title">No knowledge gaps logged</div>
+                    <div class="empty-state-desc">Gaps will populate as employees complete onboarding assessments.</div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
 
-<div class="card mb-4">
-    <div class="card-header bg-white"><strong>AI Mentor Insights by Employee</strong></div>
-    <div class="card-body table-responsive">
-        <table class="table table-hover align-middle">
-            <thead>
-                <tr>
-                    <th>Employee</th>
-                    <th>Risk</th>
-                    <th>Confidence</th>
-                    <th>Style</th>
-                    <th>Next modules</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for emp in employees %}
-                {% set mem = profile_map.get(emp.id) %}
-                <tr>
-                    <td><a href="/employees/{{ emp.id }}">{{ emp.name }}</a></td>
-                    <td>{{ mem.risk_level if mem else '—' }}</td>
-                    <td>{{ '%.0f'|format((mem.confidence_score or 0) * 100) if mem else '—' }}%</td>
-                    <td>{{ mem.preferred_learning_style if mem else '—' }}</td>
-                    <td>
-                        {% if mem and mem.recommended_next_modules %}
-                        {{ mem.recommended_next_modules[:2]|join(' · ') }}
-                        {% else %}—{% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<!-- Clean Table: AI Mentor Insights by Employee -->
+<div class="glass-card mb-4">
+    <div class="card-header-clean">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-brain text-teal" style="color: var(--brand-primary) !important;"></i>
+            <h5 class="section-title">AI Mentor Insights by Employee</h5>
+        </div>
+        <span class="badge-status badge-neutral">
+            {{ employees|length }} Profiles
+        </span>
+    </div>
+    <div class="card-body-clean p-0">
+        <div class="table-responsive">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Risk Assessment</th>
+                        <th>Confidence</th>
+                        <th>Learning Style</th>
+                        <th>Recommended Next Modules</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emp in employees %}
+                    {% set mem = profile_map.get(emp.id) %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="avatar-circle" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                    {{ emp.name[:2]|upper }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="color: var(--brand-secondary);">{{ emp.name }}</div>
+                                    <small class="text-muted" style="font-size: 0.75rem;">{{ emp.position }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if mem %}
+                                {% if mem.risk_level == 'high' %}
+                                <span class="badge-status badge-danger"><span class="badge-status-dot"></span>High</span>
+                                {% elif mem.risk_level == 'medium' %}
+                                <span class="badge-status badge-warning"><span class="badge-status-dot"></span>Medium</span>
+                                {% else %}
+                                <span class="badge-status badge-success"><span class="badge-status-dot"></span>Low</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge-status badge-neutral">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if mem %}
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-semibold small">{{ '%.0f'|format((mem.confidence_score or 0) * 100) }}%</span>
+                                <div class="progress" style="width: 50px; height: 5px; background: #f1f5f9;">
+                                    <div class="progress-bar bg-success" style="width: {{ (mem.confidence_score or 0) * 100 }}%;"></div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <span class="text-muted small">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if mem and mem.preferred_learning_style %}
+                            <span class="badge-status badge-info" style="font-size: 0.7rem;">
+                                {{ mem.preferred_learning_style.replace('_', ' ')|capitalize }}
+                            </span>
+                            {% else %}
+                            <span class="text-muted small">Standard</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if mem and mem.recommended_next_modules %}
+                                <div class="d-flex flex-wrap gap-1">
+                                    {% for mod in mem.recommended_next_modules[:2] %}
+                                    <span class="badge-status badge-neutral" style="font-size: 0.7rem;">{{ mod }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <span class="text-muted small">Standard Curriculum</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="/employees/{{ emp.id }}" class="btn btn-secondary btn-sm">
+                                <span>Details</span>
+                                <i class="fas fa-arrow-right" style="font-size: 0.75rem;"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-header bg-white"><strong>Agent Workflow Observability</strong></div>
-    <div class="card-body">
-        {% for t in traces %}
-        <div class="border rounded p-3 mb-2">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <code>{{ t.trace_id }}</code>
-                    <div class="small text-muted">Employee #{{ t.employee_id or '—' }} · {{ t.created_at }}</div>
+<!-- Workflow Observability Section -->
+<div class="glass-card">
+    <div class="card-header-clean">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-terminal text-teal" style="color: var(--brand-primary) !important;"></i>
+            <h5 class="section-title">Agent Workflow Observability</h5>
+        </div>
+        <span class="badge-status badge-neutral">Execution Logs</span>
+    </div>
+    <div class="card-body-clean">
+        {% if traces %}
+        <div class="d-flex flex-column gap-2">
+            {% for t in traces %}
+            <div class="p-3 rounded" style="background: #ffffff; border: 1px solid var(--brand-border);">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <code class="activity-trace-badge">{{ t.trace_id }}</code>
+                        <span class="text-muted small">·</span>
+                        <span class="text-muted small">Employee #{{ t.employee_id or '—' }}</span>
+                        <span class="text-muted small">·</span>
+                        <span class="text-muted small">{{ t.created_at }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-muted small">{{ t.duration_ms }} ms · {{ t.total_tokens_estimate }} tokens</span>
+                        {% if t.status == 'ok' %}
+                        <span class="badge-status badge-success"><span class="badge-status-dot"></span>OK</span>
+                        {% else %}
+                        <span class="badge-status badge-danger"><span class="badge-status-dot"></span>{{ t.status }}</span>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="text-end">
-                    <span class="badge {% if t.status == 'ok' %}bg-success{% else %}bg-danger{% endif %}">{{ t.status }}</span>
-                    <div class="small text-muted">{{ t.duration_ms }} ms · {{ t.total_tokens_estimate }} tok</div>
+                <div class="small text-muted pt-2 border-top d-flex flex-wrap gap-3">
+                    <div><strong class="text-secondary">Agents Executed:</strong> {{ t.agents_run }}</div>
+                    <div><strong class="text-secondary">Tools Invoked:</strong> {{ t.tools_used }}</div>
                 </div>
             </div>
-            <div class="mt-2 small">
-                <strong>Agents:</strong> {{ t.agents_run }}
-                <br>
-                <strong>Tools:</strong> {{ t.tools_used }}
-            </div>
+            {% endfor %}
         </div>
         {% else %}
-        <p class="text-muted mb-0">Run an onboarding workflow to populate traces.</p>
-        {% endfor %}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-code-branch"></i>
+            </div>
+            <div class="empty-state-title">No execution traces yet</div>
+            <div class="empty-state-desc">Trigger onboarding workflows to inspect real-time agent telemetry.</div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

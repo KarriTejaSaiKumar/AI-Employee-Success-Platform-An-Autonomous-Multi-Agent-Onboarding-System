@@ -3,34 +3,48 @@
 {% block title %}Knowledge Base - AetherSuccess{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<!-- Page Header -->
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
     <div>
-        <h2 class="mb-1"><i class="fas fa-book me-2"></i>RAG Knowledge Base</h2>
-        <p class="text-muted mb-0">Upload PDFs / text. Chunked, embedded, and searchable by all agents.</p>
+        <h1 class="page-title"><i class="fas fa-book me-2 text-primary" style="color: var(--brand-primary) !important;"></i>RAG Knowledge Base & Agent Tools</h1>
+        <p class="page-subtitle">Ground multi-agent intelligence with company policies, handbooks, and operational SOPs</p>
     </div>
-    <div>
-        <span class="badge bg-dark">{{ rag_stats.chunk_count }} chunks</span>
-        <span class="badge bg-secondary">{{ rag_stats.backend }}</span>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge-status badge-info">
+            <span class="badge-status-dot"></span>
+            {{ rag_stats.chunk_count }} Chunks
+        </span>
+        <span class="badge-status badge-neutral">
+            {{ rag_stats.backend }}
+        </span>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-5 mb-4">
-        <div class="card">
-            <div class="card-header bg-white"><strong>Upload Document</strong></div>
-            <div class="card-body">
+<div class="row g-4">
+    <!-- Left Column: Section 1 (Upload) & Section 3 (Knowledge Search) -->
+    <div class="col-lg-5">
+        <!-- 1. Upload Knowledge Section -->
+        <div class="glass-card mb-4">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-cloud-upload-alt text-teal" style="color: var(--brand-primary) !important;"></i>
+                    <h5 class="section-title">1. Upload Knowledge</h5>
+                </div>
+                <span class="text-muted small">PDF, TXT, MD</span>
+            </div>
+            <div class="card-body-clean">
                 <form id="uploadForm">
                     <div class="mb-3">
-                        <label class="form-label">File (PDF or TXT)</label>
+                        <label class="form-label" for="file">Knowledge Document</label>
                         <input type="file" class="form-control" id="file" accept=".pdf,.txt,.md" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Title</label>
-                        <input type="text" class="form-control" id="title" placeholder="Employee Handbook 2026">
+                        <label class="form-label" for="title">Document Title</label>
+                        <input type="text" class="form-control" id="title" placeholder="e.g. Employee Handbook 2026">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Category</label>
-                        <select class="form-control" id="category">
+                        <label class="form-label" for="category">Category</label>
+                        <select class="form-select" id="category">
                             <option value="handbook">Handbook</option>
                             <option value="policy">Policy</option>
                             <option value="hr">HR</option>
@@ -40,54 +54,89 @@
                             <option value="general">General</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary" type="submit">
-                        <i class="fas fa-cloud-upload-alt me-2"></i>Index into Vector DB
+                    <button class="btn btn-primary w-100" type="submit" id="btnUploadDoc">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Upload & Index into Vector DB</span>
                     </button>
                 </form>
-                <div id="uploadStatus" class="mt-3 small text-muted"></div>
+                <div id="uploadStatus" class="mt-2 small text-muted text-center" style="min-height: 18px;"></div>
             </div>
         </div>
 
-        <div class="card mt-4">
-            <div class="card-header bg-white"><strong>Test Knowledge Search</strong></div>
-            <div class="card-body">
-                <div class="input-group mb-3">
-                    <input type="text" id="searchQuery" class="form-control" placeholder="e.g. remote work policy">
-                    <button class="btn btn-outline-secondary" type="button" onclick="searchKnowledge()">Search</button>
+        <!-- 3. Knowledge Search Section -->
+        <div class="glass-card">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-search text-teal" style="color: var(--brand-primary) !important;"></i>
+                    <h5 class="section-title">3. Knowledge Search</h5>
                 </div>
-                <pre id="searchResults" class="bg-light p-3 rounded small" style="max-height:280px;overflow:auto;"></pre>
+                <span class="text-muted small">Vector Retrieval</span>
+            </div>
+            <div class="card-body-clean">
+                <div class="input-group mb-3">
+                    <input type="text" id="searchQuery" class="form-control" placeholder="Search onboarding knowledge..." onkeydown="if(event.key==='Enter') searchKnowledge()">
+                    <button class="btn btn-primary" type="button" onclick="searchKnowledge()">
+                        <i class="fas fa-search"></i>
+                        <span>Search</span>
+                    </button>
+                </div>
+                <div class="rounded p-3" style="background: #ffffff; border: 1px solid var(--brand-border); min-height: 120px;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <small class="text-muted fw-semibold">Retrieved Context Result:</small>
+                        <small class="text-muted" id="searchCountBadge"></small>
+                    </div>
+                    <pre id="searchResults" class="mb-0 small text-muted" style="white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 0.8rem; max-height: 250px; overflow-y: auto;">Enter a search query to test semantic vector retrieval.</pre>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-7 mb-4">
-        <div class="card mb-4">
-            <div class="card-header bg-white"><strong>Indexed Documents</strong></div>
-            <div class="card-body">
+    <!-- Right Column: Section 2 (Indexed Documents) & Section 4 (Available Agent Tools) -->
+    <div class="col-lg-7">
+        <!-- 2. Indexed Documents Section -->
+        <div class="glass-card mb-4">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-folder-open text-teal" style="color: var(--brand-primary) !important;"></i>
+                    <h5 class="section-title">2. Indexed Documents</h5>
+                </div>
+                <span class="badge-status badge-neutral">
+                    {{ documents|length }} Indexed
+                </span>
+            </div>
+            <div class="card-body-clean p-0">
                 {% if documents %}
                 <div class="table-responsive">
-                    <table class="table table-sm align-middle">
+                    <table class="table-modern">
                         <thead>
                             <tr>
-                                <th>Title</th>
+                                <th>Document</th>
                                 <th>Category</th>
                                 <th>Chunks</th>
                                 <th>Uploaded</th>
-                                <th></th>
+                                <th class="text-end">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for doc in documents %}
                             <tr>
                                 <td>
-                                    <div class="fw-semibold">{{ doc.title or doc.filename }}</div>
+                                    <div class="fw-bold text-secondary">{{ doc.title or doc.filename }}</div>
                                     <small class="text-muted">{{ doc.filename }}</small>
                                 </td>
-                                <td><span class="badge bg-light text-dark">{{ doc.category }}</span></td>
-                                <td>{{ doc.chunk_count }}</td>
-                                <td><small>{{ doc.uploaded_at }}</small></td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteDoc('{{ doc.document_id }}')">Delete</button>
+                                    <span class="badge-status badge-neutral">{{ doc.category }}</span>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold text-secondary">{{ doc.chunk_count }}</span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ doc.uploaded_at }}</small>
+                                </td>
+                                <td class="text-end">
+                                    <button class="btn btn-outline-danger btn-sm" onclick="deleteDoc('{{ doc.document_id }}')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -95,20 +144,54 @@
                     </table>
                 </div>
                 {% else %}
-                <p class="text-muted mb-0">No documents indexed yet. Upload a handbook or policy PDF to ground agents.</p>
+                <div class="empty-state py-4">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <div class="empty-state-title">No documents indexed yet</div>
+                    <div class="empty-state-desc">Upload a handbook or policy PDF above to ground all autonomous agent reasoning.</div>
+                </div>
                 {% endif %}
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header bg-white"><strong>Available Agent Tools</strong></div>
-            <div class="card-body">
-                <div class="row">
+        <!-- 4. Available Agent Tools Section -->
+        <div class="glass-card">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-tools text-teal" style="color: var(--brand-primary) !important;"></i>
+                    <h5 class="section-title">4. Available Agent Tools</h5>
+                </div>
+                <span class="badge-status badge-neutral">{{ tools|length }} Tools</span>
+            </div>
+            <div class="card-body-clean">
+                <div class="row g-2">
                     {% for tool in tools %}
-                    <div class="col-md-6 mb-3">
-                        <div class="border rounded p-3 h-100">
-                            <div class="fw-semibold"><code>{{ tool.name }}</code></div>
-                            <small class="text-muted">{{ tool.description }}</small>
+                    <div class="col-sm-6">
+                        <div class="tool-compact-card">
+                            <div class="tool-icon">
+                                {% if 'lookup' in tool.name %}
+                                <i class="fas fa-id-card"></i>
+                                {% elif 'progress' in tool.name %}
+                                <i class="fas fa-tasks"></i>
+                                {% elif 'search' in tool.name %}
+                                <i class="fas fa-search"></i>
+                                {% elif 'retrieval' in tool.name %}
+                                <i class="fas fa-file-alt"></i>
+                                {% elif 'policy' in tool.name %}
+                                <i class="fas fa-file-contract"></i>
+                                {% elif 'report' in tool.name %}
+                                <i class="fas fa-chart-line"></i>
+                                {% elif 'email' in tool.name %}
+                                <i class="fas fa-paper-plane"></i>
+                                {% else %}
+                                <i class="fas fa-cogs"></i>
+                                {% endif %}
+                            </div>
+                            <div style="min-width: 0;">
+                                <div class="tool-name-code">{{ tool.name }}</div>
+                                <p class="tool-desc-text text-truncate">{{ tool.description }}</p>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
@@ -123,36 +206,76 @@
 <script>
 document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const fileInput = document.getElementById('file');
+    if (!fileInput.files.length) return;
+
+    const btn = document.getElementById('btnUploadDoc');
+    const statusEl = document.getElementById('uploadStatus');
+    const origText = btn.innerHTML;
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Embedding into Vector DB...';
+    statusEl.textContent = 'Processing and chunking document...';
+
     const fd = new FormData();
-    fd.append('file', document.getElementById('file').files[0]);
+    fd.append('file', fileInput.files[0]);
     fd.append('category', document.getElementById('category').value);
     fd.append('title', document.getElementById('title').value);
-    document.getElementById('uploadStatus').textContent = 'Indexing...';
-    const res = await fetch('/api/knowledge/upload', { method: 'POST', body: fd });
-    const data = await res.json();
-    if (res.ok) {
-        document.getElementById('uploadStatus').textContent = `Indexed ${data.document.chunk_count} chunks.`;
-        location.reload();
-    } else {
-        document.getElementById('uploadStatus').textContent = data.detail || 'Upload failed';
+
+    try {
+        const res = await fetch('/api/knowledge/upload', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (res.ok) {
+            statusEl.textContent = `Successfully indexed ${data.document?.chunk_count || 'new'} chunks.`;
+            setTimeout(() => location.reload(), 700);
+        } else {
+            statusEl.textContent = data.detail || 'Upload failed';
+            btn.disabled = false;
+            btn.innerHTML = origText;
+        }
+    } catch (err) {
+        statusEl.textContent = 'Network error: ' + err.message;
+        btn.disabled = false;
+        btn.innerHTML = origText;
     }
 });
 
 async function searchKnowledge() {
-    const query = document.getElementById('searchQuery').value;
-    const res = await fetch('/api/knowledge/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, k: 4 })
-    });
-    const data = await res.json();
-    document.getElementById('searchResults').textContent = data.context || JSON.stringify(data, null, 2);
+    const queryInput = document.getElementById('searchQuery');
+    const query = queryInput.value.trim();
+    if (!query) return;
+
+    const resultsEl = document.getElementById('searchResults');
+    const countBadge = document.getElementById('searchCountBadge');
+    resultsEl.textContent = 'Searching vector index...';
+    countBadge.textContent = '';
+
+    try {
+        const res = await fetch('/api/knowledge/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query, k: 4 })
+        });
+        const data = await res.json();
+        if (data.context) {
+            resultsEl.textContent = data.context;
+            countBadge.textContent = 'Found context matches';
+        } else {
+            resultsEl.textContent = JSON.stringify(data, null, 2);
+        }
+    } catch (err) {
+        resultsEl.textContent = 'Search error: ' + err.message;
+    }
 }
 
 async function deleteDoc(id) {
     if (!confirm('Delete this document from the vector store?')) return;
-    await fetch(`/api/knowledge/${id}`, { method: 'DELETE' });
-    location.reload();
+    try {
+        await fetch(`/api/knowledge/${id}`, { method: 'DELETE' });
+        location.reload();
+    } catch (err) {
+        alert('Failed to delete document: ' + err.message);
+    }
 }
 </script>
 {% endblock %}

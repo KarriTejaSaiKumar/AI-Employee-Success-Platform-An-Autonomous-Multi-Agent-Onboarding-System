@@ -1,75 +1,143 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Adaptive AI Employee Success Platform{% endblock %}
+{% block title %}Home - AetherSuccess Adaptive AI Platform{% endblock %}
 
 {% block content %}
-<div class="card mb-4">
-    <div class="card-body p-5">
-        <span class="brand-badge">Autonomous Agentic AI</span>
-        <h1 class="display-5 mt-3 mb-3">Adaptive AI Employee Success Platform</h1>
-        <p class="lead text-muted mb-4" style="max-width: 720px;">
-            AetherSuccess orchestrates Planner, RAG, Quiz, Video, Progress, Feedback, Evaluator,
-            and Mentor agents with persistent digital memory — so every employee gets a personal AI mentor
-            that learns from quizzes, weak topics, and engagement over time.
+<!-- Hero Section -->
+<div class="hero-card">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <div class="hero-pill">
+                <i class="fas fa-sparkles"></i>
+                <span>Adaptive AI • Employee Success</span>
+            </div>
+            <h1 class="page-title mb-3" style="font-size: 2.25rem;">Adaptive AI Employee Success</h1>
+            <p class="page-subtitle mb-4" style="font-size: 1.05rem; line-height: 1.6; max-width: 680px;">
+                Personalized onboarding that adapts to employee progress, knowledge gaps, and engagement.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="/dashboard" class="btn btn-primary btn-lg">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Open Dashboard</span>
+                </a>
+                <a href="/knowledge" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-book"></i>
+                    <span>Upload Knowledge</span>
+                </a>
+                <a href="/insights" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Manager Insights</span>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-4 d-none d-lg-flex justify-content-center">
+            <div class="text-center p-4 glass-card" style="border-radius: 20px; width: 240px;">
+                <div class="avatar-circle mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.5rem;">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="fw-bold" style="font-size: 0.95rem; color: var(--brand-secondary);">Multi-Agent Engine</div>
+                <div class="text-muted small mt-1">Grounded RAG + Memory</div>
+                <div class="mt-3 pt-3 border-top d-flex justify-content-around">
+                    <div>
+                        <div class="fw-bold text-teal" style="color: var(--brand-primary);">100%</div>
+                        <small class="text-muted" style="font-size: 0.7rem;">Adaptive</small>
+                    </div>
+                    <div style="border-left: 1px solid var(--brand-border);"></div>
+                    <div>
+                        <div class="fw-bold text-success" style="color: var(--color-success);">8+</div>
+                        <small class="text-muted" style="font-size: 0.7rem;">AI Agents</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 4 Core Feature Cards -->
+<div class="row g-4 mb-4">
+    <!-- Card 1: RAG Knowledge Base -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="feature-card">
+            <div class="feature-icon-box kpi-icon-teal">
+                <i class="fas fa-database"></i>
+            </div>
+            <h5 class="feature-title">RAG Knowledge Base</h5>
+            <p class="feature-desc">
+                Context-grounded document ingestion and vector retrieval from handbooks, SOPs, and policies.
+            </p>
+        </div>
+    </div>
+
+    <!-- Card 2: Adaptive AI Mentor -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="feature-card">
+            <div class="feature-icon-box kpi-icon-warning">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <h5 class="feature-title">Adaptive AI Mentor</h5>
+            <p class="feature-desc">
+                Persistent memory of weak topics, confidence levels, and personalized learning roadmaps.
+            </p>
+        </div>
+    </div>
+
+    <!-- Card 3: Planner + Evaluator -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="feature-card">
+            <div class="feature-icon-box kpi-icon-info">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+            <h5 class="feature-title">Planner + Evaluator</h5>
+            <p class="feature-desc">
+                Dynamic execution graphs with rigorous automated quality gating and intelligent self-correction.
+            </p>
+        </div>
+    </div>
+
+    <!-- Card 4: Personalized Learning -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="feature-card">
+            <div class="feature-icon-box kpi-icon-success">
+                <i class="fas fa-route"></i>
+            </div>
+            <h5 class="feature-title">Personalized Learning</h5>
+            <p class="feature-desc">
+                Tailored quizzes, adaptive difficulty pacing, and automated manager intervention flags.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Autonomous Agent Workflow Section -->
+<div class="glass-card">
+    <div class="card-header-clean">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-network-wired text-primary" style="color: var(--brand-primary) !important;"></i>
+            <h5 class="section-title">Autonomous Agent Workflow</h5>
+        </div>
+        <span class="badge-status badge-success">
+            <span class="badge-status-dot"></span>
+            Orchestrated
+        </span>
+    </div>
+    <div class="card-body-clean">
+        <p class="text-muted small mb-3">
+            Autonomous multi-agent execution cycle dynamically adapting to employee interaction:
         </p>
-        <div class="d-flex flex-wrap gap-2">
-            <a href="/dashboard" class="btn btn-primary btn-lg">
-                <i class="fas fa-tachometer-alt me-2"></i>Open Dashboard
-            </a>
-            <a href="/knowledge" class="btn btn-outline-secondary btn-lg">
-                <i class="fas fa-book me-2"></i>Upload Knowledge
-            </a>
-            <a href="/insights" class="btn btn-outline-secondary btn-lg">
-                <i class="fas fa-chart-line me-2"></i>Manager Insights
-            </a>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <i class="fas fa-database fa-2x text-success mb-3"></i>
-                <h5>RAG Knowledge Base</h5>
-                <p class="text-muted mb-0">Upload handbooks, SOPs, and policies. Agents retrieve grounded context before answering.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <i class="fas fa-user-graduate fa-2x text-warning mb-3"></i>
-                <h5>Adaptive AI Mentor</h5>
-                <p class="text-muted mb-0">Persistent memory of weak/strong topics, learning style, confidence, and personalized roadmaps.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <i class="fas fa-project-diagram fa-2x text-primary mb-3"></i>
-                <h5>Planner + Evaluator</h5>
-                <p class="text-muted mb-0">A planner chooses the next agent. An evaluator quality-gates quizzes and feedback with auto-regeneration.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-body">
-        <h5 class="mb-3">Autonomous Agent Workflow</h5>
-        <p class="mb-2 text-muted">Employee joins → Planner → RAG → Quiz / Video → Progress → Feedback → Evaluator → Mentor → Memory → Notify</p>
-        <div class="d-flex flex-wrap gap-2">
-            <span class="badge bg-dark">Planner</span>
-            <span class="badge bg-success">RAG</span>
-            <span class="badge bg-primary">Quiz</span>
-            <span class="badge bg-info text-dark">Video</span>
-            <span class="badge bg-secondary">Progress</span>
-            <span class="badge bg-warning text-dark">Feedback</span>
-            <span class="badge bg-danger">Evaluator</span>
-            <span class="badge bg-teal" style="background:#0f766e;">Mentor</span>
-            <span class="badge bg-light text-dark">Memory</span>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <span class="workflow-step-pill"><i class="fas fa-user-plus text-muted"></i> Onboard</span>
+            <i class="fas fa-chevron-right text-muted small"></i>
+            <span class="workflow-step-pill"><i class="fas fa-brain text-teal" style="color: var(--brand-primary);"></i> Planner</span>
+            <i class="fas fa-chevron-right text-muted small"></i>
+            <span class="workflow-step-pill"><i class="fas fa-database text-success" style="color: var(--color-success);"></i> RAG Search</span>
+            <i class="fas fa-chevron-right text-muted small"></i>
+            <span class="workflow-step-pill"><i class="fas fa-question-circle text-primary" style="color: var(--color-info);"></i> Quiz & Video</span>
+            <i class="fas fa-chevron-right text-muted small"></i>
+            <span class="workflow-step-pill"><i class="fas fa-chart-bar text-warning" style="color: var(--color-warning);"></i> Progress Track</span>
+            <i class="fas fa-chevron-right text-muted small"></i>
+            <span class="workflow-step-pill"><i class="fas fa-shield-alt text-danger" style="color: var(--color-danger);"></i> Evaluator</span>
+            <i class="fas fa-chevron-right text-muted small"></i>
+            <span class="workflow-step-pill"><i class="fas fa-lightbulb text-teal" style="color: var(--brand-primary);"></i> Mentor Memory</span>
         </div>
     </div>
 </div>

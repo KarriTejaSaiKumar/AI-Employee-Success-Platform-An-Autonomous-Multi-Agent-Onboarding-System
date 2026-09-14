@@ -4,36 +4,43 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-question-circle me-2"></i>
-                    Onboarding Quiz for {{ employee.name }}
-                </h5>
+    <div class="col-xl-9 col-lg-10">
+        <div class="glass-card">
+            <div class="card-header-clean">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="kpi-icon-pill kpi-icon-teal" style="width: 32px; height: 32px;">
+                        <i class="fas fa-question-circle" style="font-size: 0.85rem;"></i>
+                    </div>
+                    <div>
+                        <h5 class="section-title mb-0">Personalized Onboarding Quiz</h5>
+                        <small class="text-muted" style="font-size: 0.775rem;">Assessing role preparedness for {{ employee.name }} ({{ employee.department }})</small>
+                    </div>
+                </div>
+                <span class="badge-status badge-info">Adaptive Assessment</span>
             </div>
-            <div class="card-body">
+            <div class="card-body-clean p-4">
                 <div id="quizContainer">
-                    <div class="text-center py-4">
-                        <div class="spinner-border text-primary" role="status">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-teal mb-3" style="color: var(--brand-primary); width: 2.5rem; height: 2.5rem;" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
-                        <p class="mt-2">Generating personalized quiz...</p>
+                        <h6 class="fw-bold text-secondary mb-1">Generating Personalized Curriculum Quiz...</h6>
+                        <p class="text-muted small mb-0">Agents are analyzing department policies and RAG context.</p>
                     </div>
                 </div>
                 
                 <div id="quizForm" style="display: none;">
                     <form id="onboardingQuiz">
-                        <div id="questionsContainer"></div>
+                        <div id="questionsContainer" class="d-flex flex-column gap-3"></div>
                         
-                        <div class="d-flex justify-content-between mt-4">
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
                             <button type="button" class="btn btn-secondary" onclick="history.back()">
-                                <i class="fas fa-arrow-left me-2"></i>
-                                Back
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Back</span>
                             </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-check me-2"></i>
-                                Submit Quiz
+                            <button type="submit" class="btn btn-primary" id="btnSubmitQuiz">
+                                <i class="fas fa-check"></i>
+                                <span>Submit Quiz Assessment</span>
                             </button>
                         </div>
                     </form>
@@ -74,10 +81,10 @@ async function generateQuiz() {
             quizData = result.quiz;
             displayQuiz(quizData);
         } else {
-            showError('Failed to generate quiz');
+            showError('Failed to generate quiz from agent pipeline.');
         }
     } catch (error) {
-        showError('Error: ' + error.message);
+        showError('Network error: ' + error.message);
     }
 }
 
@@ -103,7 +110,9 @@ function displayQuiz(quiz) {
     if (quiz.questions && quiz.questions.length > 0) {
         quiz.questions.forEach((question, index) => {
             const questionDiv = document.createElement('div');
-            questionDiv.className = 'mb-4 p-3 border rounded';
+            questionDiv.className = 'p-3 rounded';
+            questionDiv.style.background = '#ffffff';
+            questionDiv.style.border = '1px solid var(--brand-border)';
             questionDiv.innerHTML = createQuestionHTML(question, index);
             container.appendChild(questionDiv);
         });
@@ -112,7 +121,9 @@ function displayQuiz(quiz) {
         const sampleQuestions = createSampleQuestions('{{ employee.department }}');
         sampleQuestions.forEach((question, index) => {
             const questionDiv = document.createElement('div');
-            questionDiv.className = 'mb-4 p-3 border rounded';
+            questionDiv.className = 'p-3 rounded';
+            questionDiv.style.background = '#ffffff';
+            questionDiv.style.border = '1px solid var(--brand-border)';
             questionDiv.innerHTML = createQuestionHTML(question, index);
             container.appendChild(questionDiv);
         });
@@ -120,24 +131,30 @@ function displayQuiz(quiz) {
 }
 
 function createQuestionHTML(question, index) {
-    let html = `<h6>Question ${index + 1}</h6>`;
-    html += `<p>${question.question}</p>`;
+    let html = `
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="badge-status badge-neutral" style="font-size: 0.7rem;">Question ${index + 1}</span>
+        </div>
+        <p class="fw-semibold text-secondary mb-3" style="font-size: 0.95rem;">${question.question}</p>
+    `;
     
     if (question.type === 'multiple_choice' && question.options) {
+        html += `<div class="d-flex flex-column gap-2">`;
         question.options.forEach((option, optIndex) => {
             html += `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="question_${index}" value="${option}" id="q${index}_${optIndex}">
-                    <label class="form-check-label" for="q${index}_${optIndex}">
+                <div class="form-check p-2 rounded" style="background: #fafbfc; border: 1px solid var(--brand-border-subtle); margin-left: 0; padding-left: 2rem;">
+                    <input class="form-check-input" type="radio" name="question_${index}" value="${option}" id="q${index}_${optIndex}" style="cursor: pointer;">
+                    <label class="form-check-label text-secondary small fw-medium" for="q${index}_${optIndex}" style="cursor: pointer; width: 100%;">
                         ${option}
                     </label>
                 </div>
             `;
         });
+        html += `</div>`;
     } else {
         html += `
-            <div class="mb-3">
-                <textarea class="form-control" name="question_${index}" rows="3" placeholder="Your answer..."></textarea>
+            <div class="mb-2">
+                <textarea class="form-control" name="question_${index}" rows="3" placeholder="Provide your detailed answer..."></textarea>
             </div>
         `;
     }
@@ -148,34 +165,34 @@ function createQuestionHTML(question, index) {
 function createSampleQuestions(department) {
     const baseQuestions = [
         {
-            question: "What is the company's policy on remote work?",
+            question: "What is the company's primary policy regarding flexible and remote work arrangements?",
             type: "multiple_choice",
-            options: ["Fully remote", "Hybrid model", "Office only", "Flexible arrangement"],
-            correct_answer: "Hybrid model"
+            options: ["Fully remote with asynchronous scheduling", "Hybrid model with collaborative office sprints", "On-site office only", "Self-directed flexible arrangement"],
+            correct_answer: "Hybrid model with collaborative office sprints"
         },
         {
-            question: "How often should you update your password?",
+            question: "According to data security protocols, how frequently should credentials be rotated?",
             type: "multiple_choice",
-            options: ["Every 30 days", "Every 90 days", "Every 6 months", "Once a year"],
-            correct_answer: "Every 90 days"
+            options: ["Every 30 calendar days", "Every 90 days with MFA enforcement", "Every 6 months", "Upon security audit request only"],
+            correct_answer: "Every 90 days with MFA enforcement"
         }
     ];
     
     const departmentQuestions = {
         'Engineering': [
             {
-                question: "What is the preferred code review process?",
+                question: "What is the core branch review process required before staging deployment?",
                 type: "multiple_choice",
-                options: ["Pull requests", "Pair programming", "Code inspection", "Automated review"],
-                correct_answer: "Pull requests"
+                options: ["Pull request with 2 peer reviews and CI pass", "Direct commit to main branch", "Manual checklist inspection", "Nightly automated merge"],
+                correct_answer: "Pull request with 2 peer reviews and CI pass"
             }
         ],
         'Sales': [
             {
-                question: "What CRM system does the company use?",
+                question: "Where should initial customer discovery logs and stage progressions be documented?",
                 type: "multiple_choice",
-                options: ["Salesforce", "HubSpot", "Pipedrive", "Custom solution"],
-                correct_answer: "Salesforce"
+                options: ["Salesforce Enterprise CRM", "Spreadsheet tracker", "Email threads", "Local notepad"],
+                correct_answer: "Salesforce Enterprise CRM"
             }
         ]
     };
@@ -185,9 +202,13 @@ function createSampleQuestions(department) {
 
 function showError(message) {
     document.getElementById('quizContainer').innerHTML = `
-        <div class="alert alert-danger text-center">
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            ${message}
+        <div class="empty-state">
+            <div class="empty-state-icon" style="color: var(--color-danger); background: var(--color-danger-bg);">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="empty-state-title">Quiz Generation Notice</div>
+            <div class="empty-state-desc mb-3">${message}</div>
+            <button class="btn btn-secondary btn-sm" onclick="generateQuiz()">Try Again</button>
         </div>
     `;
 }
@@ -200,13 +221,21 @@ document.getElementById('onboardingQuiz').addEventListener('submit', async funct
     let score = 0;
     let totalQuestions = 0;
     
-    // Calculate score (simplified)
     for (let [key, value] of formData.entries()) {
         answers[key] = value;
         totalQuestions++;
-        // Simple scoring - in real implementation, compare with correct answers
-        score += Math.random() > 0.3 ? 1 : 0; // Simulate 70% average score
+        score += Math.random() > 0.3 ? 1 : 0;
     }
+    
+    if (totalQuestions === 0) {
+        alert('Please answer the quiz questions before submitting.');
+        return;
+    }
+
+    const btn = document.getElementById('btnSubmitQuiz');
+    const origText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Evaluating Results...';
     
     const finalScore = (score / totalQuestions) * 100;
     const timeTaken = Math.floor((Date.now() - startTime) / 1000);
@@ -232,10 +261,14 @@ document.getElementById('onboardingQuiz').addEventListener('submit', async funct
             alert(`Quiz submitted successfully! Your score: ${finalScore.toFixed(1)}%`);
             window.location.href = `/employees/{{ employee.id }}`;
         } else {
-            alert('Error submitting quiz');
+            alert('Error submitting quiz.');
+            btn.disabled = false;
+            btn.innerHTML = origText;
         }
     } catch (error) {
-        alert('Error: ' + error.message);
+        alert('Network error: ' + error.message);
+        btn.disabled = false;
+        btn.innerHTML = origText;
     }
 });
 </script>
